@@ -1,0 +1,11 @@
+build/
+x64/
+
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+*.user
+*.log
+termainl.log

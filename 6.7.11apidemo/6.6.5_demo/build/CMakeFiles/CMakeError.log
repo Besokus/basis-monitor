@@ -1,226 +1,10 @@
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags:  
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --c++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --ec++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c;-I__does_not_exist__ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags:  
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --c++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --ec++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c;-I__does_not_exist__ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags:  
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --c++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --ec++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c;-I__does_not_exist__ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags:  
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --c++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --ec++ 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: --target=arm-arm-none-eabi;-mcpu=cortex-m3 
-
-The output was:
-No such file or directory
-
-
-Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
-Compiler: CMAKE_CXX_COMPILER-NOTFOUND 
-Build flags: 
-Id flags: -c;-I__does_not_exist__ 
-
-The output was:
-No such file or directory
-
-
 Detecting CXX compiler ABI info failed to compile with the following output:
 Change Dir: /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_286f3/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_286f3.dir/build.make CMakeFiles/cmTC_286f3.dir/build
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_e4a6d/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_e4a6d.dir/build.make CMakeFiles/cmTC_e4a6d.dir/build
 gmake[1]: Entering directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o
-/usr/bin/c++   -v -o CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp
+Building CXX object CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++   -v -o CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
 OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
@@ -230,8 +14,8 @@ Configured with: ../src/configure -v --with-pkgversion='Ubuntu 11.4.0-1ubuntu1~2
 Thread model: posix
 Supported LTO compression algorithms: zlib zstd
 gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04.3) 
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_286f3.dir/'
- /usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_286f3.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/cclpiJWq.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e4a6d.dir/'
+ /usr/lib/gcc/x86_64-linux-gnu/11/cc1plus -quiet -v -imultiarch x86_64-linux-gnu -D_GNU_SOURCE /usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_e4a6d.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fcf-protection -o /tmp/cc1HaGBe.s
 GNU C++17 (Ubuntu 11.4.0-1ubuntu1~22.04.3) version 11.4.0 (x86_64-linux-gnu)
 	compiled by GNU C version 11.4.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
 
@@ -255,15 +39,15 @@ GNU C++17 (Ubuntu 11.4.0-1ubuntu1~22.04.3) version 11.4.0 (x86_64-linux-gnu)
 
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: ac7fa628ee459f217e6fdb88b3db0bde
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_286f3.dir/'
- as -v --64 -o CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o /tmp/cclpiJWq.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e4a6d.dir/'
+ as -v --64 -o CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o /tmp/cc1HaGBe.s
 GNU assembler version 2.38 (x86_64-linux-gnu) using BFD version (GNU Binutils for Ubuntu) 2.38
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.'
-Linking CXX executable cmTC_286f3
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_286f3.dir/link.txt --verbose=1
-/usr/bin/c++  -v CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_286f3 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.'
+Linking CXX executable cmTC_e4a6d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e4a6d.dir/link.txt --verbose=1
+/usr/bin/c++  -v CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_e4a6d 
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper
@@ -276,14 +60,14 @@ Supported LTO compression algorithms: zlib zstd
 gcc version 11.4.0 (Ubuntu 11.4.0-1ubuntu1~22.04.3) 
 COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/
 LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/11/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/11/../../../:/lib/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_286f3' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_286f3.'
- /usr/lib/gcc/x86_64-linux-gnu/11/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper -plugin-opt=-fresolution=/tmp/cc96Ny4y.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_286f3 /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/11/../../.. CMakeFiles/cmTC_286f3.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_286f3' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_286f3.'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e4a6d' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e4a6d.'
+ /usr/lib/gcc/x86_64-linux-gnu/11/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/11/lto-wrapper -plugin-opt=-fresolution=/tmp/ccFDDoBS.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --eh-frame-hdr -m elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker /lib64/ld-linux-x86-64.so.2 -pie -z now -z relro -o cmTC_e4a6d /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/11/crtbeginS.o -L/usr/lib/gcc/x86_64-linux-gnu/11 -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linux-gnu/11/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/11/../../.. CMakeFiles/cmTC_e4a6d.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-linux-gnu/11/crtendS.o /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e4a6d' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e4a6d.'
 gmake[1]: Leaving directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
 
 
 Cannot copy output executable
-  '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/cmTC_286f3'
+  '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/cmTC_e4a6d'
 to destination specified by COPY_FILE:
   '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/3.22.1/CMakeDetermineCompilerABI_CXX.bin'
 

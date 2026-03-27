@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "stdafx.h"
 #include <list>
 #include <iostream>
@@ -24,7 +24,6 @@
 #include <fstream>
 #include <deque>
 #include <chrono>
-#include <thread>
 #include <cmath>
 #include <cstdlib>
 
@@ -75,7 +74,6 @@ vector<string> vector_InstrumentID;
 vector<string> vector_OrderRef;
 vector<int> vector_FrontID;
 vector<int> vector_SessionID;
-vector<char> vector_OrderStatus;
 vector<string> md_InstrumentID;
 int action_number;
 
@@ -149,7 +147,6 @@ struct AlertConfig
 	int orderPerSecThreshold;
 	int programOrderPeakPerSecThreshold;
 	int duplicateWindowSec;
-	int simulateTradeAlert;
 	AlertConfig()
 		: orderCountThreshold(0),
 		cancelCountThreshold(0),
@@ -158,8 +155,7 @@ struct AlertConfig
 		queryPerSecThreshold(2),
 		orderPerSecThreshold(20),
 		programOrderPeakPerSecThreshold(200),
-		duplicateWindowSec(3),
-		simulateTradeAlert(0)
+		duplicateWindowSec(3)
 	{
 	}
 };
@@ -220,7 +216,6 @@ static void LoadAlertConfig()
 	g_alertConfig.orderPerSecThreshold = ParseThreshold("OrderPerSecThreshold", 20);
 	g_alertConfig.programOrderPeakPerSecThreshold = ParseThreshold("ProgramOrderPeakPerSecThreshold", 200);
 	g_alertConfig.duplicateWindowSec = ParseThreshold("DuplicateWindowSec", 3);
-	g_alertConfig.simulateTradeAlert = ParseThreshold("SimulateTradeAlert", 0);
 }
 
 static void LogAlertConfig()
@@ -229,7 +224,6 @@ static void LogAlertConfig()
 		g_alertConfig.orderCountThreshold, g_alertConfig.cancelCountThreshold, g_alertConfig.duplicateOrderCountThreshold, g_alertConfig.tradeCountThreshold);
 	LOG("[THRESHOLD_CONFIG] QueryPerSecThreshold=[%d] OrderPerSecThreshold=[%d] ProgramOrderPeakPerSecThreshold=[%d] DuplicateWindowSec=[%d]\n",
 		g_alertConfig.queryPerSecThreshold, g_alertConfig.orderPerSecThreshold, g_alertConfig.programOrderPeakPerSecThreshold, g_alertConfig.duplicateWindowSec);
-	LOG("[THRESHOLD_CONFIG] SimulateTradeAlert=[%d]\n", g_alertConfig.simulateTradeAlert);
 }
 
 static void TrackQueryRate(const string& sourceTag)
@@ -300,21 +294,6 @@ static void TrackTradeCount()
 	{
 		EmitAlert("TradeCount", g_tradeCount, g_alertConfig.tradeCountThreshold, "trade callback received");
 	}
-}
-
-static void MaybeSimulateTradeAlert()
-{
-	if (g_alertConfig.simulateTradeAlert <= 0)
-	{
-		return;
-	}
-	if (g_alertConfig.tradeCountThreshold <= 0)
-	{
-		EmitAlert("TradeCount", 1, 0, "SIMULATED (set TradeCountThreshold>0 to use threshold)");
-		return;
-	}
-	g_tradeCount = g_alertConfig.tradeCountThreshold;
-	EmitAlert("TradeCount", g_tradeCount, g_alertConfig.tradeCountThreshold, "SIMULATED");
 }
 
 static bool IsNearlyInteger(double value)
@@ -423,37 +402,6 @@ const char* GetFrontDisconnectReasonText(int nReason)
 	}
 }
 
-static int GetChinaLocalMinutes()
-{
-	std::time_t tt = std::time(nullptr);
-	std::tm gmt = {};
-#ifdef _WIN32
-	gmtime_s(&gmt, &tt);
-#else
-	gmtime_r(&tt, &gmt);
-#endif
-	int hour = gmt.tm_hour + 8;
-	if (hour >= 24) hour -= 24;
-	if (hour < 0) hour += 24;
-	return hour * 60 + gmt.tm_min;
-}
-
-static bool IsWithinChinaTradingWindow()
-{
-	int minutes = GetChinaLocalMinutes();
-	return minutes >= (8 * 60 + 30) && minutes <= (15 * 60 + 30);
-}
-
-void LogTraderErrorDetail(const char* callbackName, CThostFtdcRspInfoField* pRspInfo);
-
-static void LogLocalApiError(const char* callbackName, int errorId, const char* errorMsg)
-{
-	CThostFtdcRspInfoField rsp = {};
-	rsp.ErrorID = errorId;
-	strcpy_s(rsp.ErrorMsg, errorMsg);
-	LogTraderErrorDetail(callbackName, &rsp);
-}
-
 void LogTraderErrorDetail(const char* callbackName, CThostFtdcRspInfoField* pRspInfo)
 {
 	if (!pRspInfo)
@@ -558,10 +506,10 @@ void LogRequestReturnStatus(const char* requestName, int retCode)
 class CSimpleMdHandler : public CThostFtdcMdSpi
 {
 public:
-	// ????????????????效?????CThostFtdcMduserApi????????
+	// ????????????????Ч?????CThostFtdcMduserApi????????
 	CSimpleMdHandler(CThostFtdcMdApi *pUserApi) : m_pUserMdApi(pUserApi) {}
 	~CSimpleMdHandler() {}
-	// ????????????泄????????????????????????????械??
+	// ????????????й????????????????????????????е??
 	void deletemyself()
 	{
 		delete this;
@@ -594,8 +542,8 @@ public:
 	{
 		CThostFtdcReqUserLoginField reqUserLogin = { 0 };
 		strcpy_s(reqUserLogin.BrokerID, g_chBrokerID);
-		//strcpy_s(reqUserLogin.UserID, g_chUserID);
-		//strcpy_s(reqUserLogin.UserID, g_chPassword);
+		strcpy_s(reqUserLogin.UserID, g_chUserID);
+		strcpy_s(reqUserLogin.Password, g_chPassword);
 		int num = m_pUserMdApi->ReqUserLogin(&reqUserLogin, 111);
 		LogRequestReturnStatus("MdApi::ReqUserLogin", num);
 	}
@@ -616,7 +564,7 @@ public:
 		LOG("</OnHeartBeatWarning>\n");
 	}
 
-	// ????????????泄????????????????梅?????????
+	// ????????????й????????????????÷?????????
 	virtual void OnFrontDisconnected(int nReason)
 	{
 		// ??????????????API???????????????????????????
@@ -625,7 +573,7 @@ public:
 		LOG("</OnFrontDisconnected>\n");
 	}
 
-	// ????????????????????梅????????????????????????
+	// ????????????????????÷????????????????????????
 	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
 		CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 	{
@@ -656,7 +604,7 @@ public:
 		LOG("</OnRspUserLogin>\n");
 		LogTraderErrorDetail("Md::OnRspUserLogin", pRspInfo);
 		if (pRspInfo && pRspInfo->ErrorID != 0) {
-			// ????????????????写?????
+			// ????????????????д?????
 			LOG("\tFailed to login, errorcode=%d errormsg=%s requestid=%d chain = %d",
 				pRspInfo->ErrorID, pRspInfo->ErrorMsg, nRequestID, bIsLast);
 			cin.get();
@@ -797,63 +745,24 @@ public:
 	///?????????
 	virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)
 	{
-		//????????
-		SYSTEMTIME sys;
-		GetLocalTime(&sys);
-		LOG("%02d:%02d:%02d.%03d\t",
-			sys.wHour,
-			sys.wMinute,
-			sys.wSecond,
-			sys.wMilliseconds);
-		LOG("<OnRtnDepthMarketData>");
-		if (pDepthMarketData)
+		if (!pDepthMarketData)
 		{
-			LOG("\tTradingDay [%s]\n", pDepthMarketData->TradingDay);
-			LOG("\tInstrumentID [%s]", pDepthMarketData->InstrumentID);
-			LOG("\tExchangeID [%s]", pDepthMarketData->ExchangeID);
-			LOG("\tExchangeInstID [%s]\n", pDepthMarketData->ExchangeInstID);
-			LOG("\tUpdateTime [%s]", pDepthMarketData->UpdateTime);
-			LOG("\tActionDay [%s]\n", pDepthMarketData->ActionDay);
-			LOG("\tVolume [%d]\n", pDepthMarketData->Volume);
-			LOG("\tUpdateMillisec [%d]", pDepthMarketData->UpdateMillisec);
-			LOG("\tBidVolume1 [%d]\n", pDepthMarketData->BidVolume1);
-			LOG("\tAskVolume1 [%d]\n", pDepthMarketData->AskVolume1);
-			LOG("\tBidVolume2 [%d]\n", pDepthMarketData->BidVolume2);
-			LOG("\tAskVolume2 [%d]\n", pDepthMarketData->AskVolume2);
-			LOG("\tBidVolume3 [%d]\n", pDepthMarketData->BidVolume3);
-			LOG("\tAskVolume3 [%d]\n", pDepthMarketData->AskVolume3);
-			LOG("\tBidVolume4 [%d]\n", pDepthMarketData->BidVolume4);
-			LOG("\tAskVolume4 [%d]\n", pDepthMarketData->AskVolume4);
-			LOG("\tBidVolume5 [%d]\n", pDepthMarketData->BidVolume5);
-			LOG("\tAskVolume5 [%d]\n", pDepthMarketData->AskVolume5);
-			LOG("\tLastPrice [%.8lf]\n", (pDepthMarketData->LastPrice > 10000000) ? 0 : pDepthMarketData->LastPrice);
-			LOG("\tPreSettlementPrice [%.8lf]\n", (pDepthMarketData->PreSettlementPrice > 10000000) ? 0 : pDepthMarketData->PreSettlementPrice);
-			LOG("\tPreClosePrice [%.8lf]\n", (pDepthMarketData->PreClosePrice > 10000000) ? 0 : pDepthMarketData->PreClosePrice);
-			LOG("\tPreOpenInterest [%.8lf]\n", (pDepthMarketData->PreOpenInterest > 10000000) ? 0 : pDepthMarketData->PreOpenInterest);
-			LOG("\tOpenPrice [%.8lf]\n", (pDepthMarketData->OpenPrice > 10000000) ? 0 : pDepthMarketData->OpenPrice);
-			LOG("\tHighestPrice [%.8lf]\n", (pDepthMarketData->HighestPrice > 10000000) ? 0 : pDepthMarketData->HighestPrice);
-			LOG("\tLowestPrice [%.8lf]\n", (pDepthMarketData->LowestPrice > 10000000) ? 0 : pDepthMarketData->LowestPrice);
-			LOG("\tTurnover [%.8lf]\n", (pDepthMarketData->Turnover > 10000000) ? 0 : pDepthMarketData->Turnover);
-			LOG("\tOpenInterest [%.8lf]\n", (pDepthMarketData->OpenInterest > 10000000) ? 0 : pDepthMarketData->OpenInterest);
-			LOG("\tClosePrice [%.8lf]\n", (pDepthMarketData->ClosePrice > 10000000) ? 0 : pDepthMarketData->ClosePrice);
-			LOG("\tSettlementPrice [%.8lf]\n", (pDepthMarketData->SettlementPrice > 10000000) ? 0 : pDepthMarketData->SettlementPrice);
-			LOG("\tUpperLimitPrice [%.8lf]\n", (pDepthMarketData->UpperLimitPrice > 10000000) ? 0 : pDepthMarketData->UpperLimitPrice);
-			LOG("\tLowerLimitPrice [%.8lf]\n", (pDepthMarketData->LowerLimitPrice > 10000000) ? 0 : pDepthMarketData->LowerLimitPrice);
-			LOG("\tPreDelta [%.8lf]\n", (pDepthMarketData->PreDelta > 10000000) ? 0 : pDepthMarketData->PreDelta);
-			LOG("\tCurrDelta [%.8lf]\n", (pDepthMarketData->CurrDelta > 10000000) ? 0 : pDepthMarketData->CurrDelta);
-			LOG("\tBidPrice1 [%.8lf]\n", (pDepthMarketData->BidPrice1 > 10000000) ? 0 : pDepthMarketData->BidPrice1);
-			LOG("\tAskPrice1 [%.8lf]\n", (pDepthMarketData->AskPrice1 > 10000000) ? 0 : pDepthMarketData->AskPrice1);
-			LOG("\tBidPrice2 [%.8lf]\n", (pDepthMarketData->BidPrice2 > 10000000) ? 0 : pDepthMarketData->BidPrice2);
-			LOG("\tAskPrice2 [%.8lf]\n", (pDepthMarketData->AskPrice2 > 10000000) ? 0 : pDepthMarketData->AskPrice2);
-			LOG("\tBidPrice3 [%.8lf]\n", (pDepthMarketData->BidPrice3 > 10000000) ? 0 : pDepthMarketData->BidPrice3);
-			LOG("\tAskPrice3 [%.8lf]\n", (pDepthMarketData->AskPrice3 > 10000000) ? 0 : pDepthMarketData->AskPrice3);
-			LOG("\tBidPrice4 [%.8lf]\n", (pDepthMarketData->BidPrice4 > 10000000) ? 0 : pDepthMarketData->BidPrice4);
-			LOG("\tAskPrice4 [%.8lf]\n", (pDepthMarketData->AskPrice4 > 10000000) ? 0 : pDepthMarketData->AskPrice4);
-			LOG("\tBidPrice5 [%.8lf]\n", (pDepthMarketData->BidPrice5 > 10000000) ? 0 : pDepthMarketData->BidPrice5);
-			LOG("\tAskPrice5 [%.8lf]\n", (pDepthMarketData->AskPrice5 > 10000000) ? 0 : pDepthMarketData->AskPrice5);
-			LOG("\tAveragePrice [%.8lf]\n", (pDepthMarketData->AveragePrice > 10000000) ? 0 : pDepthMarketData->AveragePrice);
+			return;
 		}
-		LOG("</OnRtnDepthMarketData>\n");
+
+		double lastPrice = (pDepthMarketData->LastPrice > 10000000) ? 0 : pDepthMarketData->LastPrice;
+		double bidPrice1 = (pDepthMarketData->BidPrice1 > 10000000) ? 0 : pDepthMarketData->BidPrice1;
+		double askPrice1 = (pDepthMarketData->AskPrice1 > 10000000) ? 0 : pDepthMarketData->AskPrice1;
+		LOG("[MD_TICK] InstrumentID=[%s] UpdateTime=[%s.%03d] LastPrice=[%.8lf] Bid1=[%.8lf@%d] Ask1=[%.8lf@%d] Volume=[%d]\n",
+			pDepthMarketData->InstrumentID,
+			pDepthMarketData->UpdateTime,
+			pDepthMarketData->UpdateMillisec,
+			lastPrice,
+			bidPrice1,
+			pDepthMarketData->BidVolume1,
+			askPrice1,
+			pDepthMarketData->AskVolume1,
+			pDepthMarketData->Volume);
 	};
 
 	///???????????
@@ -872,7 +781,7 @@ public:
 					md_num++;
 				}
 				int result = m_pUserMdApi->SubscribeForQuoteRsp(ppInstrumentID, a);
-				LOG((result == 0) ? "???????????1......??????\n" : "???????????1......???????????????=[%d]\n", result);
+				LOG((result == 0) ? "����ѯ������1......���ͳɹ�\n" : "����ѯ������1......����ʧ�ܣ��������=[%d]\n", result);
 			}
 			else if (count1 == md_InstrumentID.size() / 500)
 			{
@@ -883,7 +792,7 @@ public:
 					md_num++;
 				}
 				int result = m_pUserMdApi->SubscribeForQuoteRsp(ppInstrumentID, count2);
-				LOG((result == 0) ? "???????????2......??????\n" : "???????????2......???????????????=[%d]\n", result);
+				LOG((result == 0) ? "����ѯ������2......���ͳɹ�\n" : "����ѯ������2......����ʧ�ܣ��������=[%d]\n", result);
 			}
 		}
 	}
@@ -989,7 +898,7 @@ public:
 		a.TopicID = atoi(new_TopicID.c_str());
 		//strcpy_s(a.InstrumentID, "");
 		int b = m_pUserMdApi->ReqQryMulticastInstrument(&a, nRequestID++);
-		LOG((b == 0) ? "???????椴???......??????\n" : "???????椴???......???????????=[%d]\n", b);
+		LOG((b == 0) ? "???????�???......??????\n" : "???????�???......???????????=[%d]\n", b);
 	}
 
 	virtual void OnRspQryMulticastInstrument(CThostFtdcMulticastInstrumentField *pMulticastInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
@@ -1044,7 +953,6 @@ public:
 		// strcpy_s(g_chProductID, getConfigOptional("config", "ProductID", "").c_str());
 		LoadAlertConfig();
 		LogAlertConfig();
-		MaybeSimulateTradeAlert();
 
 		strcpy_s(g_NewExecOrderRef, "");
 		strcpy_s(g_NewExecOrderSysID, "");
@@ -1154,7 +1062,7 @@ public:
 
 	void GetFrontInfo()
 	{
-		// 褰撳墠浣跨敤鐨勫ご鏂囦欢鐗堟湰鏈彁渚?CThostFtdcFrontInfoField 鍙?GetFrontInfo 鎺ュ彛锛岃繖閲屼繚鐣欑┖瀹炵幇浠ュ吋瀹圭紪璇?
+		// 当前使用的头文件版本未提�?CThostFtdcFrontInfoField �?GetFrontInfo 接口，这里保留空实现以兼容编�?
 	}
 
 	void ReqUserLogin()
@@ -1364,11 +1272,13 @@ public:
 	///???????????
 	void ReqOrderInsert_Ordinary()
 	{
+		int cnt = 2;
+		while(cnt--){
 		system("cls");
-		ReqOrderInsert_Ordinary_Checked();
-		return;
+		//ReqOrderInsert_Ordinary_Checked();
+		//return;
 		string new_limitprice;
-		LOG("请输入指定价格：\n");
+		LOG("������ָ���۸�\n");
 		cin >> new_limitprice;
 
 		CThostFtdcInputOrderField ord = { 0 };
@@ -1385,7 +1295,7 @@ public:
 		ord.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
 		
 		int num1;
-	Direction:LOG("请选择买卖方向\t1.买\t2.卖\n");
+	Direction:LOG("��ѡ����������\t1.��\t2.��\n");
 		cin >> num1;
 		if(num1==1){
 			ord.Direction = THOST_FTDC_D_Buy;//??
@@ -1394,12 +1304,12 @@ public:
 			ord.Direction = THOST_FTDC_D_Sell;//??
 		}
 		else {
-			LOG("输入错误请重新输入\n");
+			LOG("�����������������\n");
 			_getch();
 			goto Direction;
 		}
 		int num2;
-	CombOffsetFlag:LOG("请输入开平方向\t1.开仓\t2.平仓\t3.强平\t4.平今\t5.平昨\t6.强减\t7.本地强平\n");
+	CombOffsetFlag:LOG("�����뿪ƽ����\t1.����\t2.ƽ��\t3.ǿƽ\t4.ƽ��\t5.ƽ��\t6.ǿ��\t7.����ǿƽ\n");
 		cin >> num2;
 		if (num2 == 1) {
 			ord.CombOffsetFlag[0] = THOST_FTDC_OF_Open;
@@ -1432,7 +1342,7 @@ public:
 		//ord.LimitPrice = 598;
 		ord.VolumeTotalOriginal = 3;
 		ord.TimeCondition = THOST_FTDC_TC_IOC;///??????????????
-		ord.VolumeCondition = THOST_FTDC_VC_MV;///??小????
+		ord.VolumeCondition = THOST_FTDC_VC_MV;///??С????
 		ord.MinVolume = 3;
 		ord.ContingentCondition = THOST_FTDC_CC_Immediately;
 		ord.StopPrice = 0;
@@ -1440,7 +1350,8 @@ public:
 		ord.IsAutoSuspend = 0;
 		strcpy_s(ord.ExchangeID, g_chExchangeID);
 		int a = m_pUserApi->ReqOrderInsert(&ord, 1);
-		LOG((a == 0) ? "报单录入请求限价单......发送成功\n" : "报单录入请求限价单......发送失败，序号=[%d]\n", a);
+		LOG((a == 0) ? "����¼�������޼۵�......���ͳɹ�\n" : "����¼�������޼۵�......����ʧ�ܣ����=[%d]\n", a);
+	}
 	}
 
 	///????????????
@@ -1478,7 +1389,7 @@ public:
 		int a = m_pUserApi->ReqOrderInsert(&ord, 1);
 		LOG((a == 0) ? "?????????????????......??????\n" : "?????????????????......???????????=[%d]\n", a);
 	}
-	///???????屑????
+	///???????м????
 	void ReqOrderInsert_Touch()
 	{
 		int new_StopPrice;
@@ -1496,7 +1407,7 @@ public:
 		ord.Direction = THOST_FTDC_D_Buy;//??
 		ord.CombOffsetFlag[0] = THOST_FTDC_OF_Open;
 		ord.CombHedgeFlag[0] = THOST_FTDC_HF_Speculation;
-		ord.LimitPrice = 0;//?屑???0????
+		ord.LimitPrice = 0;//?м???0????
 		ord.VolumeTotalOriginal = 1;
 		ord.TimeCondition = THOST_FTDC_TC_GFD;
 		ord.VolumeCondition = THOST_FTDC_VC_AV;
@@ -1507,7 +1418,7 @@ public:
 		ord.IsAutoSuspend = 0;
 		strcpy_s(ord.ExchangeID, g_chExchangeID);
 		int a = m_pUserApi->ReqOrderInsert(&ord, 1);
-		LOG((a == 0) ? "????????????屑????......??????\n" : "????????????屑????......???????????=[%d]\n", a);
+		LOG((a == 0) ? "????????????м????......??????\n" : "????????????м????......???????????=[%d]\n", a);
 	}
 
 	///??????????
@@ -1536,7 +1447,7 @@ public:
 		//ord.LimitPrice = atoi(getConfig("config", "LimitPrice").c_str());
 		ord.LimitPrice = new_limitprice;
 		ord.VolumeTotalOriginal = 1;
-		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????效
+		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????Ч
 		ord.VolumeCondition = THOST_FTDC_VC_AV;///???????
 		ord.MinVolume = 1;
 		ord.ContingentCondition = THOST_FTDC_CC_TouchProfit;
@@ -1574,7 +1485,7 @@ public:
 		//ord.LimitPrice = atoi(getConfig("config", "LimitPrice").c_str());
 		ord.LimitPrice = new_limitprice;
 		ord.VolumeTotalOriginal = insert_num;
-		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????效
+		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????Ч
 		ord.VolumeCondition = THOST_FTDC_VC_CV;///???????
 		ord.MinVolume = 1;
 		ord.ContingentCondition = THOST_FTDC_CC_Immediately;
@@ -1613,7 +1524,7 @@ public:
 		ord.LimitPrice = new_limitprice;
 		ord.VolumeTotalOriginal = insert_num;
 		ord.TimeCondition = THOST_FTDC_TC_IOC;///??????????????
-		ord.VolumeCondition = THOST_FTDC_VC_AV;///?魏?????
+		ord.VolumeCondition = THOST_FTDC_VC_AV;///?κ?????
 		ord.MinVolume = 2;
 		ord.ContingentCondition = THOST_FTDC_CC_Immediately;
 		ord.StopPrice = 0;
@@ -1624,7 +1535,7 @@ public:
 		LOG((a == 0) ? "???????????????......??????\n" : "???????????????......???????????=[%d]\n", a);
 	}
 
-	//?屑??
+	//?м??
 	void ReqOrderInsert_AnyPrice()
 	{
 		CThostFtdcInputOrderField ord = { 0 };
@@ -1644,7 +1555,7 @@ public:
 		ord.LimitPrice = 0;//???
 		ord.VolumeTotalOriginal = 40;
 		ord.TimeCondition = THOST_FTDC_TC_IOC;///??????????????
-		ord.VolumeCondition = THOST_FTDC_VC_AV;///?魏?????
+		ord.VolumeCondition = THOST_FTDC_VC_AV;///?κ?????
 		ord.MinVolume = 1;
 		ord.ContingentCondition = THOST_FTDC_CC_Immediately;//????
 		//ord.StopPrice = 0;
@@ -1655,7 +1566,7 @@ public:
 		LOG((a == 0) ? "???????????????......??????\n" : "???????????????......???????????=[%d]\n", a);
 	}
 
-	//?屑??????(?薪???)
+	//?м??????(?н???)
 	void ReqOrderInsert_BestPrice()
 	{
 		CThostFtdcInputOrderField ord = { 0 };
@@ -1673,8 +1584,8 @@ public:
 		//ord.LimitPrice = atoi(getConfig("config", "LimitPrice").c_str());
 		//ord.LimitPrice = new_limitprice;
 		ord.VolumeTotalOriginal = 1;
-		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????效
-		ord.VolumeCondition = THOST_FTDC_VC_AV;///?魏?????
+		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????Ч
+		ord.VolumeCondition = THOST_FTDC_VC_AV;///?κ?????
 		ord.MinVolume = 1;
 		ord.ContingentCondition = THOST_FTDC_CC_Immediately;
 		ord.StopPrice = 0;
@@ -1707,8 +1618,8 @@ public:
 		//ord.LimitPrice = atoi(getConfig("config", "LimitPrice").c_str());
 		ord.LimitPrice = new_limitprice;
 		ord.VolumeTotalOriginal = 1;
-		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????效
-		ord.VolumeCondition = THOST_FTDC_VC_AV;///?魏?????
+		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????Ч
+		ord.VolumeCondition = THOST_FTDC_VC_AV;///?κ?????
 		ord.MinVolume = 1;
 		ord.ContingentCondition = THOST_FTDC_CC_Immediately;
 		ord.StopPrice = 0;
@@ -1741,8 +1652,8 @@ public:
 		//ord.LimitPrice = atoi(getConfig("config", "LimitPrice").c_str());
 		ord.LimitPrice = new_limitprice;
 		ord.VolumeTotalOriginal = 1;
-		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????效
-		ord.VolumeCondition = THOST_FTDC_VC_AV;///?魏?????
+		ord.TimeCondition = THOST_FTDC_TC_GFD;///??????Ч
+		ord.VolumeCondition = THOST_FTDC_VC_AV;///?κ?????
 		ord.MinVolume = 1;
 		ord.ContingentCondition = THOST_FTDC_CC_Immediately;
 		ord.StopPrice = 0;
@@ -1778,19 +1689,19 @@ public:
 		LOG("ReqOffsetSetting is not supported in current API header version.\n");
 	}
 
-	///??????贸???????
+	///??????ó???????
 	void ReqCancelOffsetSetting()
 	{
 		LOG("ReqCancelOffsetSetting is not supported in current API header version.\n");
 	}
 
-	///??????????貌??
+	///??????????ò??
 	void ReqQryOffsetSetting()
 	{
 		LOG("ReqQryOffsetSetting is not supported in current API header version.\n");
 	}
 
-	///鎶ュ崟鎿嶄綔璇锋眰
+	///报单操作请求
 	void ReqOrderAction_Ordinary()
 	{
 		CThostFtdcInputOrderActionField a = { 0 };
@@ -1811,7 +1722,7 @@ public:
             TrackCancelCount();
             TrackOrderRateAndDuplicate(string("CANCEL|") + a.ExchangeID + "|" + a.InstrumentID + "|" + a.OrderRef + "|" + a.OrderSysID);
         }
-		LOG((ab == 0) ? "鎶ュ崟鎿嶄綔璇锋眰......鍙戦€佹垚鍔焅n" : "鎶ュ崟鎿嶄綔璇锋眰......鍙戦€佸け璐ワ紝搴忓彿=[%d]\n", ab);
+		LOG((ab == 0) ? "报单操作请求......发送成功\n" : "报单操作请求......发送失败，序号=[%d]\n", ab);
 	}
 
 	///??????????????
@@ -1891,10 +1802,6 @@ public:
 		vector_OrderSysID.clear();
 		vector_ExchangeID.clear();
 		vector_InstrumentID.clear();
-		vector_OrderRef.clear();
-		vector_FrontID.clear();
-		vector_SessionID.clear();
-		vector_OrderStatus.clear();
 		CThostFtdcQryOrderField a = { 0 };
 		strcpy_s(a.BrokerID, g_chBrokerID);
 		strcpy_s(a.InvestorID, g_chInvestorID);
@@ -1902,58 +1809,6 @@ public:
 		//strcpy_s(a.ExchangeID, g_chExchangeID);
 		int ab = m_pUserApi->ReqQryOrder(&a, nRequestID++);
 		LOG((ab == 0) ? "??????????......??????\n" : "??????????......???????????=[%d]\n", ab);
-	}
-
-	static bool IsCancellableOrderStatus(char s)
-	{
-		return s == THOST_FTDC_OST_NoTradeQueueing ||
-			s == THOST_FTDC_OST_PartTradedQueueing ||
-			s == THOST_FTDC_OST_NotTouched ||
-			s == THOST_FTDC_OST_Touched;
-	}
-
-	// One-key: query orders then cancel all active/unfilled ones.
-	void OneKeyCancelAllActiveOrders()
-	{
-		LOG("[ONE_KEY_CANCEL] start: query orders then cancel active ones\n");
-
-		// Best-effort wait for query completion (OnRspQryOrder bIsLast -> SetEvent)
-		ResetEvent(g_hEvent);
-		ReqQryOrder();
-		DWORD waitRet = WaitForSingleObject(g_hEvent, 8000);
-		if (waitRet != WAIT_OBJECT_0)
-		{
-			LOG("[ONE_KEY_CANCEL] warning: query wait timeout or failed, proceed with current list\n");
-		}
-
-		int total = static_cast<int>(vector_OrderSysID.size());
-		int toCancel = 0;
-		for (int i = 0; i < total; ++i)
-		{
-			if (i < static_cast<int>(vector_OrderStatus.size()) && IsCancellableOrderStatus(vector_OrderStatus[i]))
-			{
-				++toCancel;
-			}
-		}
-
-		LOG("[ONE_KEY_CANCEL] orders: total=%d active_to_cancel=%d\n", total, toCancel);
-
-		int sent = 0;
-		for (int i = 0; i < total; ++i)
-		{
-			if (i < static_cast<int>(vector_OrderStatus.size()) && !IsCancellableOrderStatus(vector_OrderStatus[i]))
-			{
-				continue;
-			}
-
-			ReqOrderAction_forqry(i + 1);
-			++sent;
-
-			// Avoid flooding the front; keep it simple and conservative.
-			std::this_thread::sleep_for(std::chrono::milliseconds(200));
-		}
-
-		LOG("[ONE_KEY_CANCEL] done: cancel_requests_sent=%d\n", sent);
 	}
 
 	///???????????
@@ -2486,15 +2341,40 @@ public:
 			return;
 		}
 
-		if (!IsWithinChinaTradingWindow())
+		SimpleInstrumentInfo instInfo;
+		if (!EnsureInstrumentInfo(instInput, exchInput, instInfo))
 		{
-			// Use a standard CTP error code so it maps via error.xml.
-			LogLocalApiError("ReqOrderInsert_Ordinary", 17, "LOCAL: Not in trading time (CN 08:30-15:30)");
+			LOG("[LOCAL_REJECT] reason=INSTRUMENT_NOT_FOUND InstrumentID=[%s] ExchangeID=[%s]\n", instInput.c_str(), exchInput.c_str());
+			return;
+		}
+		if (!IsPriceOnTick(limitPrice, instInfo.priceTick))
+		{
+			LOG("[LOCAL_REJECT] reason=BAD_PRICE_TICK price=[%.8lf] tick=[%.8lf]\n", limitPrice, instInfo.priceTick);
+			return;
+		}
+		if (instInfo.maxLimitOrderVolume > 0 && volume > instInfo.maxLimitOrderVolume)
+		{
+			LOG("[LOCAL_REJECT] reason=VOLUME_EXCEEDS_MAX volume=[%d] max=[%d]\n", volume, instInfo.maxLimitOrderVolume);
+			return;
+		}
+		if (instInfo.minLimitOrderVolume > 0 && volume < instInfo.minLimitOrderVolume)
+		{
+			LOG("[LOCAL_REJECT] reason=VOLUME_BELOW_MIN volume=[%d] min=[%d]\n", volume, instInfo.minLimitOrderVolume);
 			return;
 		}
 
-		// Simplified mode for alert-threshold testing: don't block order submission on
-		// instrument/tick/limit checks (those checks are validated by CTP asynchronously).
+		SimpleDepthLimits lim;
+		if (!EnsureDepthLimits(instInput, exchInput, lim) || !lim.valid || lim.upperLimitPrice <= 0.0 || lim.lowerLimitPrice <= 0.0)
+		{
+			LOG("[LOCAL_REJECT] reason=PRICE_LIMIT_UNAVAILABLE InstrumentID=[%s] ExchangeID=[%s]\n", instInput.c_str(), exchInput.c_str());
+			return;
+		}
+		if (limitPrice > lim.upperLimitPrice || limitPrice < lim.lowerLimitPrice)
+		{
+			LOG("[LOCAL_REJECT] reason=PRICE_OUT_OF_RANGE price=[%.8lf] lower=[%.8lf] upper=[%.8lf]\n",
+				limitPrice, lim.lowerLimitPrice, lim.upperLimitPrice);
+			return;
+		}
 
 		CThostFtdcInputOrderField ord = { 0 };
 		strcpy_s(ord.InvestUnitID, "InvestUnitID");
@@ -2558,7 +2438,7 @@ public:
 		strcpy_s(a.BrokerID, g_chBrokerID);
 		strcpy_s(a.InvestorID, g_chInvestorID);
 		string Traday;
-		LOG("???????????????????路?(????:20180101,?路???201801):");
+		LOG("???????????????????·?(????:20180101,?·???201801):");
 		cin >> Traday;
 		strcpy_s(a.TradingDay, Traday.c_str());
 		int b = m_pUserApi->ReqQrySettlementInfo(&a, nRequestID++);
@@ -2575,7 +2455,7 @@ public:
 		LOG("?????????????????????\n");
 		LOG("1.????????\n");
 		LOG("2.??????\n");
-		LOG("3.?泄?????\n");
+		LOG("3.?й?????\n");
 		LOG("5.???????\n");
 		LOG("6.????????\n");
 		LOG("7.???????\n");
@@ -2591,12 +2471,12 @@ public:
 		cin >> bankid;
 		if (bankid == 1 | 2 | 3 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16)
 		{
-			//strcpy_s(a.BankID, itoa(bankid, a.BankID, 10));///???写???
+			//strcpy_s(a.BankID, itoa(bankid, a.BankID, 10));///???д???
 			itoa(bankid, a.BankID, 10);
 		}
 		else
 		{
-			LOG("?????????????写???\n");
+			LOG("?????????????д???\n");
 			goto cir1;
 		}
 		int choos;
@@ -2996,28 +2876,28 @@ public:
 			}if (pOrder->OrderStatus == THOST_FTDC_OST_PartTradedNotQueueing)///???????????????
 			{
 				LOG("???????????????\n\n");
-			}if (pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing)///未????????????
+			}if (pOrder->OrderStatus == THOST_FTDC_OST_NoTradeQueueing)///δ????????????
 			{
 				chioce_action = 0;
-				LOG("未????????????\n\n");
+				LOG("δ????????????\n\n");
 
 				
-			}if (pOrder->OrderStatus == THOST_FTDC_OST_NoTradeNotQueueing)///未????????????
+			}if (pOrder->OrderStatus == THOST_FTDC_OST_NoTradeNotQueueing)///δ????????????
 			{
-				LOG("未????????????\n\n");
+				LOG("δ????????????\n\n");
 			}if (pOrder->OrderStatus == THOST_FTDC_OST_Canceled)///????
 			{
 				LOG("????\n\n");
 				//SetEvent(g_hEvent);
 				//CSimpleHandler::ReqQryTradingAccount();
-			}if (pOrder->OrderStatus == THOST_FTDC_OST_Unknown)///未?
+			}if (pOrder->OrderStatus == THOST_FTDC_OST_Unknown)///δ?
 			{
-				LOG("未?\n\n");
+				LOG("δ?\n\n");
 				//CSimpleHandler::ReqQryTradingAccount();
-			}if (pOrder->OrderStatus == THOST_FTDC_OST_NotTouched)///??未????
+			}if (pOrder->OrderStatus == THOST_FTDC_OST_NotTouched)///??δ????
 			{
 				chioce_action = 1;
-				LOG("??未????\n\n");
+				LOG("??δ????\n\n");
 			}if (pOrder->OrderStatus == THOST_FTDC_OST_Touched)///?????
 			{
 				LOG("?????\n\n");
@@ -3127,16 +3007,11 @@ public:
 			vector_OrderRef.push_back(pOrder->OrderRef);
 			vector_FrontID.push_back(pOrder->FrontID);
 			vector_SessionID.push_back(pOrder->SessionID);
-			vector_OrderStatus.push_back(pOrder->OrderStatus);
 		}
 		CTraderSpi::OnRspQryOrder(pOrder,pRspInfo,nRequestID,bIsLast);
 		LogTraderErrorDetail("OnRspQryOrder", pRspInfo);
 		action_number++;
 		LOG("\n???????\"%d\"\n\n", action_number);
-		if (bIsLast)
-		{
-			SetEvent(g_hEvent);
-		}
 	}
 
 	///?????????
@@ -3173,7 +3048,7 @@ public:
 			LOG("?????????????????????\n");
 			LOG("1.????????\n");
 			LOG("2.??????\n");
-			LOG("3.?泄?????\n");
+			LOG("3.?й?????\n");
 			LOG("5.???????\n");
 			LOG("6.????????\n");
 			LOG("7.???????\n");
@@ -3189,12 +3064,12 @@ public:
 			cin >> bankid;
 			if (bankid == 1 | 2 | 3 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16)
 			{
-				//strcpy_s(a.BankID, itoa(bankid, a.BankID, 10));///???写???
+				//strcpy_s(a.BankID, itoa(bankid, a.BankID, 10));///???д???
 				itoa(bankid, a.BankID, 10);
 			}
 			else
 			{
-				LOG("?????????????写???\n");
+				LOG("?????????????д???\n");
 				_getch();
 			}
 		}
@@ -3216,7 +3091,7 @@ public:
 		/*strcpy_s(a.BankAccount, "123456789");
 		strcpy_s(a.BankPassWord, "123456");///????????*/
 		//strcpy_s(a.BankAccount, "621485212110187");
-		//strcpy_s(a.BankPassWord, "092812");///????????--????????锌?????
+		//strcpy_s(a.BankPassWord, "092812");///????????--????????п?????
 		strcpy_s(a.AccountID, g_chInvestorID);///????????
 		//strcpy_s(a.Password, "092812");///???????--???????
 		strcpy_s(a.Password, "yangweitao_654321");///???????--???????
@@ -3249,7 +3124,7 @@ public:
 		LOG("?????????????????????\n");
 		LOG("1.????????\n");
 		LOG("2.??????\n");
-		LOG("3.?泄?????\n");
+		LOG("3.?й?????\n");
 		LOG("5.???????\n");
 		LOG("6.????????\n");
 		LOG("7.???????\n");
@@ -3265,7 +3140,7 @@ public:
 		cin >> bankid;
 		if (bankid == 1 | 2 | 3 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16)
 		{
-			//strcpy_s(a.BankID, itoa(bankid, a.BankID, 10));///???写???
+			//strcpy_s(a.BankID, itoa(bankid, a.BankID, 10));///???д???
 			itoa(bankid, a.BankID, 10);
 		}
 		else {
@@ -3275,7 +3150,7 @@ public:
 		}
 		strcpy_s(a.BankBranchID, "0000");///???????
 		strcpy_s(a.BrokerID, g_chBrokerID);
-		//strcpy_s(a.BankBranchID, "0000");///???蟹??????????
+		//strcpy_s(a.BankBranchID, "0000");///???з??????????
 		//strcpy_s(a.TradeDate, "20170829");///????????
 		//strcpy_s(a.TradeTime, "09:00:00");
 		//strcpy_s(a.BankSerial, "");///?????????
@@ -3334,7 +3209,7 @@ public:
 		
 		int choose_2 = 0;
 		while (choose_2 != 1 && choose_2 != 2 && choose_2 != 3) {
-			LOG("?????????????????????????\n1.?????????位\t2.?????????位\t3.???????????????????位\n");
+			LOG("?????????????????????????\n1.?????????λ\t2.?????????λ\t3.???????????????????λ\n");
 			cin >> choose_2;
 			if (choose_2 == 1) { a.OptSelfCloseFlag = THOST_FTDC_OSCF_CloseSelfOptionPosition; }
 			else if (choose_2 == 2) { a.OptSelfCloseFlag = THOST_FTDC_OSCF_ReserveOptionPosition; }
@@ -3439,17 +3314,17 @@ public:
 		LOG((b == 0) ? "?????????????......??????\n" : "?????????????......???????????????=[%d]\n", b);
 	}
 
-	///???????????????????校????
+	///???????????????????У????
 	void ReqQrySecAgentCheckMode()
 	{
 		CThostFtdcQrySecAgentCheckModeField a = { 0 };
 		strcpy_s(a.BrokerID, g_chBrokerID);
 		strcpy_s(a.InvestorID, g_chInvestorID);
 		int b = m_pUserApi->ReqQrySecAgentCheckMode(&a, 1);
-		LOG((b == 0) ? "???????????????????校????......??????\n" : "???????????????????校????......???????????????=[%d]\n", b);
+		LOG((b == 0) ? "???????????????????У????......??????\n" : "???????????????????У????......???????????????=[%d]\n", b);
 	}
 
-	///???????????????????屑??????????????
+	///???????????????????м??????????????
 	///??????????????????????????????
 	void RegisterUserSystemInfo()
 	{
@@ -3491,8 +3366,8 @@ public:
 		LOG((b == 0) ? "????????????......??????\n" : "????????????......???????????????=[%d]\n", b);
 	}
 
-	///???????????????????屑????????????????
-	///??????????????蔚???????????????
+	///???????????????????м????????????????
+	///??????????????ε???????????????
 	void SubmitUserSystemInfo()
 	{
 		char pSystemInfo[344];
@@ -3587,7 +3462,7 @@ public:
 		strcpy_s(a.Password, g_chPassword);
 		strcpy_s(a.UserProductInfo, "");
 		strcpy_s(a.InterfaceProductInfo, "");
-		strcpy_s(a.ProtocolInfo, "");//协?????
+		strcpy_s(a.ProtocolInfo, "");//Э?????
 		strcpy_s(a.MacAddress, "");//Mac???
 		strcpy_s(a.ClientIPAddress, "");//???IP???
 		strcpy_s(a.LoginRemark, "");//???????
@@ -3597,7 +3472,7 @@ public:
 		LOG((b == 0) ? "?????????????????????????......??????\n" : "?????????????????????????......???????????????=[%d]\n", b);
 	}
 
-	///??????????卸???????????????
+	///??????????ж???????????????
 	void ReqUserLoginWithText()
 	{
 		CThostFtdcReqUserLoginWithTextField a = { 0 };
@@ -3613,11 +3488,11 @@ public:
 		strcpy_s(a.Text, "");
 		a.ClientIPPort = 10000;
 		int b = m_pUserApi->ReqUserLoginWithText(&a, nRequestID++);
-		LOG((b == 0) ? "??????????卸???????????????......??????\n" : 
-			"??????????卸???????????????......???????????????=[%d]\n", b);
+		LOG((b == 0) ? "??????????ж???????????????......??????\n" : 
+			"??????????ж???????????????......???????????????=[%d]\n", b);
 	}
 
-	///??????????卸?????????????
+	///??????????ж?????????????
 	void ReqUserLoginWithOTP()
 	{
 		CThostFtdcReqUserLoginWithOTPField a = { 0 };
@@ -3633,7 +3508,7 @@ public:
 		strcpy_s(a.OTPPassword, "");
 		a.ClientIPPort = 10000;
 		int b = m_pUserApi->ReqUserLoginWithOTP(&a, nRequestID++);
-		LOG((b == 0) ? "??????????卸?????????????......??????\n" : "??????????卸?????????????......???????????????=[%d]\n", b);
+		LOG((b == 0) ? "??????????ж?????????????......??????\n" : "??????????ж?????????????......???????????????=[%d]\n", b);
 	}
 
 	///???????????????????

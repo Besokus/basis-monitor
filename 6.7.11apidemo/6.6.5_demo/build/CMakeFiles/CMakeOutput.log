@@ -15,13 +15,13 @@ The CXX compiler identification is GNU, found in "/mnt/c/Users/yp636/Documents/w
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_c4406/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_c4406.dir/build.make CMakeFiles/cmTC_c4406.dir/build
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_407fa/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_407fa.dir/build.make CMakeFiles/cmTC_407fa.dir/build
 gmake[1]: Entering directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_c4406.dir/testCXXCompiler.cxx.o
-/usr/bin/c++    -o CMakeFiles/cmTC_c4406.dir/testCXXCompiler.cxx.o -c /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTC_c4406
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c4406.dir/link.txt --verbose=1
-/usr/bin/c++ CMakeFiles/cmTC_c4406.dir/testCXXCompiler.cxx.o -o cmTC_c4406 
+Building CXX object CMakeFiles/cmTC_407fa.dir/testCXXCompiler.cxx.o
+/usr/bin/c++    -o CMakeFiles/cmTC_407fa.dir/testCXXCompiler.cxx.o -c /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_407fa
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_407fa.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_407fa.dir/testCXXCompiler.cxx.o -o cmTC_407fa 
 gmake[1]: Leaving directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
 
 
@@ -29,13 +29,13 @@ gmake[1]: Leaving directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/
 Determining if the include file pthread.h exists passed with the following output:
 Change Dir: /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_1effc/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1effc.dir/build.make CMakeFiles/cmTC_1effc.dir/build
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_99254/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_99254.dir/build.make CMakeFiles/cmTC_99254.dir/build
 gmake[1]: Entering directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_1effc.dir/CheckIncludeFile.cxx.o
-/usr/bin/c++   -std=gnu++11 -o CMakeFiles/cmTC_1effc.dir/CheckIncludeFile.cxx.o -c /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
-Linking CXX executable cmTC_1effc
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1effc.dir/link.txt --verbose=1
-/usr/bin/c++ CMakeFiles/cmTC_1effc.dir/CheckIncludeFile.cxx.o -o cmTC_1effc 
+Building CXX object CMakeFiles/cmTC_99254.dir/CheckIncludeFile.cxx.o
+/usr/bin/c++   -std=gnu++11 -o CMakeFiles/cmTC_99254.dir/CheckIncludeFile.cxx.o -c /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+Linking CXX executable cmTC_99254
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_99254.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_99254.dir/CheckIncludeFile.cxx.o -o cmTC_99254 
 gmake[1]: Leaving directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
 
 
@@ -43,13 +43,13 @@ gmake[1]: Leaving directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/
 Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD succeeded with the following output:
 Change Dir: /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_02bb9/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_02bb9.dir/build.make CMakeFiles/cmTC_02bb9.dir/build
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_b9ab3/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_b9ab3.dir/build.make CMakeFiles/cmTC_b9ab3.dir/build
 gmake[1]: Entering directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_02bb9.dir/src.cxx.o
-/usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD  -std=gnu++11 -o CMakeFiles/cmTC_02bb9.dir/src.cxx.o -c /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/src.cxx
-Linking CXX executable cmTC_02bb9
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_02bb9.dir/link.txt --verbose=1
-/usr/bin/c++ CMakeFiles/cmTC_02bb9.dir/src.cxx.o -o cmTC_02bb9 
+Building CXX object CMakeFiles/cmTC_b9ab3.dir/src.cxx.o
+/usr/bin/c++ -DCMAKE_HAVE_LIBC_PTHREAD  -std=gnu++11 -o CMakeFiles/cmTC_b9ab3.dir/src.cxx.o -c /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_b9ab3
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b9ab3.dir/link.txt --verbose=1
+/usr/bin/c++ CMakeFiles/cmTC_b9ab3.dir/src.cxx.o -o cmTC_b9ab3 
 gmake[1]: Leaving directory '/mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo/6.7.11apidemo/6.6.5_demo/build/CMakeFiles/CMakeTmp'
 
 

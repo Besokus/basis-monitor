@@ -1,7 +1,19 @@
-#!/usr/bin/env bash
-cp -r /mnt/c/Users/yp636/Documents/workdir/6.7.11apidemo ~/workdir/
-cd ./build
-rm -rf *
-cmake ..
-make -j
+#!/bin/sh
+set -eu
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+RUNTIME_ROOT="${HOME}/.cache/ctp_demo_linux"
+BUILD_DIR="${RUNTIME_ROOT}/build"
+
+rm -rf "${BUILD_DIR}"
+mkdir -p "${BUILD_DIR}"
+
+cp -f "${SCRIPT_DIR}/config.ini" "${RUNTIME_ROOT}/config.ini"
+rm -rf "${RUNTIME_ROOT}/flow"
+ln -s "${SCRIPT_DIR}/flow" "${RUNTIME_ROOT}/flow"
+
+cmake -S "${SCRIPT_DIR}" -B "${BUILD_DIR}"
+cmake --build "${BUILD_DIR}" -j"$(nproc)"
+
+cd "${BUILD_DIR}"
 sudo ./testprogram
