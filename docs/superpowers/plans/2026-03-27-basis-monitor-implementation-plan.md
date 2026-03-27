@@ -135,6 +135,8 @@ Responsibility:
 - The current repo has no JSON dependency. Implement only the minimal fixed-schema JSON parsing needed for the four config files, and lock it down with fixture tests.
 - Keep `6.7.11apidemo/6.6.5_demo` unchanged during migration except for reading it as reference.
 - Do not copy all of `main.h`. Re-express only the minimal MD login/subscription/callback path in focused files.
+- Keep `basis_monitor` inside the current repository during phase 1. If development needs to continue in another working directory, use `git worktree` instead of copying the folder.
+- If `basis_monitor` is later extracted into its own repository, preserve history with `git subtree split --prefix basis_monitor ...` or an equivalent history-preserving tool, not a plain filesystem copy.
 
 ### Task 1: Scaffold the Standalone Project and Build Graph
 
@@ -706,6 +708,8 @@ Update `README.md` with:
 - how to update spot price during the day
 - how to read alert logs
 - known phase-1 limitations
+- how to continue development in another directory with `git worktree`
+- how to preserve history if `basis_monitor` is later split into a standalone repository
 
 - [ ] **Step 6: Commit**
 
