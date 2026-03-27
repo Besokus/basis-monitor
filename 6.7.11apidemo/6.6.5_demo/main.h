@@ -101,6 +101,7 @@ TThostFtdcAppIDType	g_chAppID;
 TThostFtdcInstrumentIDType	g_chProductID;
 
 HANDLE xinhao = CreateEvent(NULL, false, false, NULL);
+HANDLE g_hMdDataEvent = CreateEvent(NULL, false, false, NULL);
 
 CTraderApi *pUserApi = new CTraderApi;
 
@@ -753,6 +754,21 @@ public:
 		double lastPrice = (pDepthMarketData->LastPrice > 10000000) ? 0 : pDepthMarketData->LastPrice;
 		double bidPrice1 = (pDepthMarketData->BidPrice1 > 10000000) ? 0 : pDepthMarketData->BidPrice1;
 		double askPrice1 = (pDepthMarketData->AskPrice1 > 10000000) ? 0 : pDepthMarketData->AskPrice1;
+		if (!m_hasReceivedFirstMarketData)
+		{
+			m_hasReceivedFirstMarketData = true;
+			LOG("[MARKET_DATA_OK] InstrumentID=[%s] UpdateTime=[%s.%03d] LastPrice=[%.8lf] Bid1=[%.8lf@%d] Ask1=[%.8lf@%d] Volume=[%d]\n",
+				pDepthMarketData->InstrumentID,
+				pDepthMarketData->UpdateTime,
+				pDepthMarketData->UpdateMillisec,
+				lastPrice,
+				bidPrice1,
+				pDepthMarketData->BidVolume1,
+				askPrice1,
+				pDepthMarketData->AskVolume1,
+				pDepthMarketData->Volume);
+			SetEvent(g_hMdDataEvent);
+		}
 		LOG("[MD_TICK] InstrumentID=[%s] UpdateTime=[%s.%03d] LastPrice=[%.8lf] Bid1=[%.8lf@%d] Ask1=[%.8lf@%d] Volume=[%d]\n",
 			pDepthMarketData->InstrumentID,
 			pDepthMarketData->UpdateTime,
@@ -927,6 +943,7 @@ public:
 private:
 	// ???CThostFtdcMduserApi????????
 	CThostFtdcMdApi *m_pUserMdApi;
+	bool m_hasReceivedFirstMarketData = false;
 };
 
 //??????

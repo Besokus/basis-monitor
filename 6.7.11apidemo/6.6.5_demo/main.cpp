@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "main.h"
 #include <thread>
+#include <limits>
 
 #ifdef _WIN32
 #define FLOW_PATH ".\\flow\\"
@@ -67,12 +68,21 @@ int main()
 			md_InstrumentID = split(New_instrument, ":");*/
 			md_InstrumentID.push_back(instrumentId);
 
-			ash.SubscribeMarketData();
-			//ash.UnSubscribeMarketData();//退订行情
-			//ash.UnSubscribeForQuoteRsp();//退订询价
-			//ash.ReqQryMulticastInstrument();//请求查询组播合约
-			//WaitForSingleObject(xinhao, INFINITE);
-			_getch();
+            ResetEvent(g_hMdDataEvent);
+            ash.SubscribeMarketData();
+            //ash.UnSubscribeMarketData();//退订行情
+            //ash.UnSubscribeForQuoteRsp();//退订询价
+            //ash.ReqQryMulticastInstrument();//请求查询组播合约
+            WaitForSingleObject(xinhao, INFINITE);
+            LOG("Waiting up to 10 seconds for first market data tick...\n");
+            DWORD mdWaitResult = WaitForSingleObject(g_hMdDataEvent, 10000);
+            if (mdWaitResult == WAIT_TIMEOUT)
+            {
+                LOG("[MARKET_DATA_WAIT_TIMEOUT] No market data received within 10 seconds after subscription.\n");
+            }
+            LOG("Press any key to exit market-data verification.\n");
+            cin.ignore((std::numeric_limits<std::streamsize>::max)(), '\n');
+            _getch();
 			pUserMdApi->Release();
 			return 0;
 			exit(-1);
