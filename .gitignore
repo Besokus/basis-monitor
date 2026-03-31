@@ -1,1 +1,16 @@
 .worktrees/
+
+# basis_monitor local builds
+basis_monitor/build*/
+
+# basis_monitor runtime outputs
+basis_monitor/data/*
+!basis_monitor/data/.gitkeep
+basis_monitor/logs/*
+!basis_monitor/logs/.gitkeep
+basis_monitor/runtime/flow/*
+!basis_monitor/runtime/flow/.gitkeep
+
+# basis_monitor local machine overrides / secrets
+basis_monitor/config/ctp.local.ini
+basis_monitor/config/*.local.json
