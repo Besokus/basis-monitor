@@ -14,3 +14,4 @@ basis_monitor/runtime/flow/*
 # basis_monitor local machine overrides / secrets
 basis_monitor/config/ctp.local.ini
 basis_monitor/config/*.local.json
+basis_monitor/config/privatekey.ppk

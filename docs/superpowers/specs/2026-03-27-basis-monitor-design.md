@@ -1,7 +1,7 @@
-﻿# Basis Monitor 设计文档
+# Basis Monitor 设计文档
 
 ## 概要
-在仓库根目录下创建一个全新的独立项目 `basis_monitor`，并使其与内层 `6.7.11apidemo` 目录同级，复用 `6.7.11apidemo/6.6.5_demo` 中已经验证可用的 CTP 行情接收能力，同时将职责拆分为清晰的模块：行情接入、配置加载、数据存储、年化基差计算与告警。第一阶段先通过“CTP 实时期货行情 + 本地提供的现货价格”打通完整闭环，随后实时计算盘中年化基差，并在年化基差为负时发出告警。
+在 `basis_monitor` 下创建一个全新的独立项目，复用 `6.7.11apidemo/6.6.5_demo` 中已经验证可用的 CTP 行情接收能力，同时将职责拆分为清晰的模块：行情接入、配置加载、数据存储、年化基差计算与告警。第一阶段先通过“CTP 实时期货行情 + 本地提供的现货价格”打通完整闭环，随后实时计算盘中年化基差，并在年化基差为负时发出告警。
 
 ## 目标
 - 构建一个独立的 `basis_monitor` 项目，而不是继续在 `6.6.5_demo` 上叠加功能。
@@ -68,18 +68,18 @@
 ## 建议的项目结构
 
 ### 顶层目录
-- `basis_monitor/`（与 `6.7.11apidemo/` 同级）
+- `basis_monitor/`
 
 ### 源码结构
 - `basis_monitor/CMakeLists.txt`
 - `basis_monitor/README.md`
-- `basis_monitor/app/main.cpp`
 - `basis_monitor/include/basis_monitor/config/`
 - `basis_monitor/include/basis_monitor/logging/`
 - `basis_monitor/include/basis_monitor/domain/`
 - `basis_monitor/include/basis_monitor/ctp/`
 - `basis_monitor/include/basis_monitor/monitor/`
 - `basis_monitor/include/basis_monitor/storage/`
+- `basis_monitor/app/main.cpp`
 - `basis_monitor/src/config/`
 - `basis_monitor/src/logging/`
 - `basis_monitor/src/ctp/`
@@ -305,16 +305,7 @@
 - 如果直接复制过多 `main.h` 内容，会把当前单体式结构再次带入新项目。
 - 当前 demo 混合了多种职责，抽取时必须非常小心，避免遗漏隐藏依赖。
 
-## 仓库演进建议
-- 第一阶段建议先将 `basis_monitor` 保持在当前仓库中，作为仓库根目录下、与 `6.7.11apidemo/` 同级的独立模块开发。
-- 如果只是想在另一个目录继续开发，同时保留完整 Git 历史，应使用 `git worktree`，而不是直接复制文件夹。
-- 如果未来要将 `basis_monitor` 拆成独立仓库并保留该模块自己的提交历史，优先使用 `git subtree split --prefix basis_monitor ...`，也可在需要更细粒度历史重写时使用 `git filter-repo --path basis_monitor ...`。
-- 如果只是仓库内调整目录位置，应使用 `git mv`，避免后续 blame、diff 和历史追踪变差。
-- 直接把 `basis_monitor` 文件夹复制到别处不会携带 Git 历史，只会复制当前文件内容。
-
 ## 建议
 将新的独立项目 `basis_monitor` 分两步安全落地：
 1. 先在新项目中抽取并验证“仅行情接收”的闭环。
 2. 再在已验证的行情通路上叠加本地现货价加载、基差计算、结果存储和负基差告警。
-
-
