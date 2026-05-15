@@ -1,0 +1,26 @@
+[Unit]
+Description=Basis Monitor intraday basis monitoring service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=forking
+WorkingDirectory=/list/10.101.5.62/basis-monitor-zhongtai/basis_monitor
+Environment=HOME=/list/10.101.5.62/basis-monitor-zhongtai
+PIDFile=/list/10.101.5.62/basis-monitor-zhongtai/basis_monitor/runtime/basis_monitor.pid
+ExecStart=/bin/sh /list/10.101.5.62/basis-monitor-zhongtai/basis_monitor/start.sh
+ExecStop=/bin/sh /list/10.101.5.62/basis-monitor-zhongtai/basis_monitor/stop.sh
+ExecReload=/bin/sh /list/10.101.5.62/basis-monitor-zhongtai/basis_monitor/stop.sh
+ExecReload=/bin/sh /list/10.101.5.62/basis-monitor-zhongtai/basis_monitor/start.sh
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=300
+TimeoutStopSec=30
+KillMode=process
+
+# 建议根据实际部署用户补充以下字段
+# User=<deploy-user>
+# Group=<deploy-group>
+
+[Install]
+WantedBy=multi-user.target
