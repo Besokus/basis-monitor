@@ -1,0 +1,16 @@
+{
+  "terminal_alert": true,
+  "file_alert": false,
+  "negative_threshold": 0.0,
+  "repeat_interval_minutes": 20,
+  "relay_pull_interval_seconds": 10,
+  "report_relay_times": [
+    "11:29",
+    "14:59"
+  ],
+  "report_relay_window_minutes": 5,
+  "wecom_request_timeout_seconds": 8,
+  "wecom_max_send_retries": 3,
+  "wecom_send_retry_delay_seconds": 5,
+  "max_report_send_attempts": 10
+}
