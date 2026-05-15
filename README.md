@@ -3,6 +3,21 @@
 `basis_monitor` is a standalone intraday basis monitoring application for stock-index futures.
 At startup it reads reference CSV datasets, selects the following groups by latest available turnover, subscribes those contracts through the configured market-data provider, computes annualized basis against the latest available index close, and raises alerts when annualized basis falls below the configured threshold.
 
+## Tech Stack (技术栈)
+
+- Language: `C++17` (core runtime), `Python3` (ops / reporting utilities), `Bash` (launcher + automation), `PowerShell` (local migration sanity checks)
+- Build: `CMake >= 3.20` + system toolchain (Linux recommended; `CMakeLists.txt` builds `basis_monitor` and unit tests via `ctest`)
+- Market data adapters (行情接入):
+- `CTP` formal live MdApi (`thostmduserapi_se.so`) + `LinuxDataCollect.so` (bundled under `vendor/ctp/*`)
+- `XTP` Quote SDK (`libxtpxquoteapi.so`) as an optional provider (the SDK root is referenced by `CMakeLists.txt`)
+- Storage: append-only `CSV` outputs (`data/output/basis_results.csv`, `data/output/alert_events.csv`) + text/PNG reports under `data/output/reports/`
+- Alerting / notification: WeCom robot webhook (markdown + image payloads via `scripts/*`)
+- Deployment: “Zhongtai server runs prebuilt binary only” + dual-server split; `systemd` unit template under `deploy/systemd/`
+- Observability: file logs (`logs/runtime.log`, `logs/alert.log`) + terminal snapshot rendering
+
+Important constraint:
+- The Zhongtai server is treated as a runtime host only: upload **binaries + runtime data files** only; do not deploy source code there.
+
 ## Current Implementation Status
 
 For the current execution phase, completed items, pending tasks, and field-validation checkpoints, see:
