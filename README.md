@@ -1,6 +1,42 @@
 # Basis Monitor — 股指期货日内基差实时监控系统
 
-面向量化私募的股指期货基差实时监控与告警系统。自动筛选 IF/IC/IM 主力合约，接入 CTP/XTP 双路行情，逐 tick 计算年化基差率，负基差时通过企业微信机器人实时推送告警，11:30/15:00 自动生成图文报告。
+<div align="center">
+
+![Language](https://img.shields.io/badge/language-C++17-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![CMake](https://img.shields.io/badge/build-CMake%203.20+-064F8C?style=for-the-badge&logo=cmake&logoColor=white)
+![Python](https://img.shields.io/badge/script-Python%203-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Bash](https://img.shields.io/badge/shell-Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white)
+![Platform](https://img.shields.io/badge/platform-Linux%20x86__64-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Tests](https://img.shields.io/badge/tests-25%20passing-4CAF50?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![Status](https://img.shields.io/badge/status-production-1976D2?style=for-the-badge&logo=githubactions&logoColor=white)
+
+**面向量化私募的股指期货基差实时监控与告警系统**
+
+</div>
+
+自动筛选 IF/IC/IM 主力合约，接入 CTP/XTP 双路行情，逐 tick 计算年化基差率，负基差时通过企业微信机器人实时推送告警，11:30/15:00 自动生成图文报告。
+
+---
+
+## 目录
+
+- [核心价值](#核心价值)
+- [技术栈](#技术栈)
+- [项目架构](#项目架构)
+- [硬件与环境要求](#硬件与环境要求)
+- [快速开始](#快速开始)
+- [配置说明](#配置说明)
+- [Python 脚本说明](#python-脚本说明)
+- [Shell 脚本说明](#shell-脚本说明)
+- [双服务器部署架构](#双服务器部署架构)
+- [年化基差计算逻辑](#年化基差计算逻辑)
+- [合约筛选规则](#合约筛选规则)
+- [告警行为](#告警行为)
+- [运行时输出](#运行时输出)
+- [单元测试](#单元测试)
+- [参考数据来源](#参考数据来源)
+
+---
 
 ## 核心价值
 
@@ -15,19 +51,30 @@
 
 ## 技术栈
 
-| 层级 | 技术 |
+<p align="center">
+  <img src="https://img.shields.io/badge/C++17-00599C?style=flat-square&logo=c%2B%2B&logoColor=white" alt="C++17">
+  <img src="https://img.shields.io/badge/CMake-3.20+-064F8C?style=flat-square&logo=cmake&logoColor=white" alt="CMake">
+  <img src="https://img.shields.io/badge/Python-3.6+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Bash-GNU-4EAA25?style=flat-square&logo=gnu-bash&logoColor=white" alt="Bash">
+  <img src="https://img.shields.io/badge/PowerShell-5.1-5391FE?style=flat-square&logo=powershell&logoColor=white" alt="PowerShell">
+  <img src="https://img.shields.io/badge/CTP-MdApi-red?style=flat-square" alt="CTP">
+  <img src="https://img.shields.io/badge/XTP-Quote%20SDK-orange?style=flat-square" alt="XTP">
+  <img src="https://img.shields.io/badge/WeCom-Robot%20Webhook-07C160?style=flat-square&logo=wechat&logoColor=white" alt="WeCom">
+  <img src="https://img.shields.io/badge/SFTP-Automation-4285F4?style=flat-square" alt="SFTP">
+</p>
+
+| 层级 | 技术栈 |
 |---|---|
-| 核心运行时 | C++17（GCC 7+ / Clang 5+） |
-| 构建系统 | CMake 3.20+ |
-| 行情接入 | CTP 正式版 MdApi（`thostmduserapi_se.so`）+ LinuxDataCollect |
-| 指数行情 | XTP Quote SDK（`libxtpxquoteapi.so`），可选启用 |
-| 数据存储 | CSV 文本格式（行情记录、基差结果、告警事件） |
-| 报告渲染 | 内建点阵字体 PNG 渲染器（Python3 标准库，零额外依赖） |
+| 核心运行时 | `C++17` GCC 7+ / Clang 5+ |
+| 构建系统 | `CMake 3.20+` 静态库 + 单可执行文件 |
+| 行情接入 | CTP 正式版 `thostmduserapi_se.so` + `LinuxDataCollect.so` |
+| 指数行情 | XTP `libxtpxquoteapi.so`（可选启用，提升基差精度） |
+| 数据存储 | CSV 追加写入（行情记录 / 基差结果 / 告警事件） |
+| 报告渲染 | 内建 5×5 点阵字体 PNG 渲染器（纯 Python3 标准库） |
 | 消息推送 | 企业微信机器人 Webhook（Markdown + 图片） |
-| 部署脚本 | Bash（构建/启停/数据摆渡/定时调度） |
-| 运维编排 | Python3（SFTP 拉取、告警中继、报告生成、调度编排） |
-| 进程管理 | nohup 后台运行 + PID 文件管理 |
-| 版本控制 | Git |
+| 自动化脚本 | `Bash` 构建/启停/SFTP 数据摆渡 + `Python` 告警中继/报告生成 |
+| 进程管理 | `nohup` 后台常驻 + PID 文件 + systemd 模板 |
+| 测试框架 | `CTest` 25 个单元测试 |
 
 ## 项目架构
 
