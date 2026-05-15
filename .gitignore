@@ -1,17 +1,23 @@
 .worktrees/
 
-# basis_monitor local builds
-basis_monitor/build*/
+# local builds
+build/
 
-# basis_monitor runtime outputs
-basis_monitor/data/*
-!basis_monitor/data/.gitkeep
-basis_monitor/logs/*
-!basis_monitor/logs/.gitkeep
-basis_monitor/runtime/flow/*
-!basis_monitor/runtime/flow/.gitkeep
+# runtime outputs
+logs/*
+!logs/.gitkeep
+data/output/*
+!data/output/.gitkeep
 
-# basis_monitor local machine overrides / secrets
-basis_monitor/config/ctp.local.ini
-basis_monitor/config/*.local.json
-basis_monitor/config/privatekey.ppk
+# runtime flow artifacts
+runtime/flow/*
+!runtime/flow/.gitkeep
+
+# local editor state
+.vscode/
+
+# secrets / machine-local configs
+config/ctp.ini
+config/xtp.ini
+config/sftp.conf
+config/SHshidaigygo
