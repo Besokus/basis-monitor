@@ -1,0 +1,6 @@
+{
+  "terminal_alert": true,
+  "file_alert": false,
+  "negative_threshold": -0.25,
+  "repeat_interval_minutes": 20
+}
