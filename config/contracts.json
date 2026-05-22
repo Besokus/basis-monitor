@@ -1,0 +1,9 @@
+{
+  "contracts": [
+    {
+      "instrument_id": "IC2606",
+      "expiry_date": "2026-06-19",
+      "enabled": true
+    }
+  ]
+}
